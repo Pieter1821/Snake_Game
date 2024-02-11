@@ -8,46 +8,38 @@ export const Movement = () => {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      switch (e.key) {
-        case 'ArrowUp':
-          setDirection({ x: 0, y: -1 });
-          break;
-        case 'ArrowDown':
-          setDirection({ x: 0, y: 1 });
-          break;
-        case 'ArrowLeft':
-          setDirection({ x: -1, y: 0 });
-          break;
-        case 'ArrowRight':
-          setDirection({ x: 1, y: 0 });
-          break;
-        default:
-          break;
+      const newDirection = getNewDirection(e.key);
+      if (!newDirection) return;
+
+      // Prevent the snake from reversing directly back onto itself
+      if (newDirection.x + direction.x === 0 && newDirection.y + direction.y === 0) {
+        return;
       }
+
+      setDirection(newDirection);
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [direction]);
 
-  useEffect(() => {
-    const moveSnake = () => {
-      setSnake((prevSnake) => {
-        const newHead = { x: prevSnake[0].x + direction.x, y: prevSnake[0].y + direction.y };
-        return [newHead, ...prevSnake.slice(0, -1)];
-      });
-    };
-
-    const intervalId = setInterval(moveSnake, 200);
-
-    // Cleanup function to clear the interval when the component unmounts or direction changes
-    return () => clearInterval(intervalId);
-  }, [direction]); // Include direction in the dependency array to re-establish the interval when direction changes
-
+  function getNewDirection(key) {
+    switch (key) {
+      case 'ArrowUp':
+        return { x: 0, y: -1 };
+      case 'ArrowDown':
+        return { x: 0, y: 1 };
+      case 'ArrowLeft':
+        return { x: -1, y: 0 };
+      case 'ArrowRight':
+        return { x: 1, y: 0 };
+      default:
+        return null;
+    }
+  }
   return (
     <GameBoard>
-        <Snake snake={snake} />
+      <Snake snakeSegments={snake} />
     </GameBoard>
   );
 };
-

@@ -1,4 +1,6 @@
 import GameBoard from "./components/gameboard/page";
+import Snake from "./components/snake/page"
+
 
 const HomePage = () => {
   return (

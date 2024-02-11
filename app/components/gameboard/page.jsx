@@ -4,7 +4,7 @@ export const BOARD_SIZE = 10;
 
 let board;
 
-const GameBoard = () => {
+const GameBoard = ({children}) => {
   const getBoard = () => {
     return Array.from({ length: BOARD_SIZE }, (_, i) => Array.from({ length: BOARD_SIZE }, (_, j) => ({ x: i, y: j })));
   };
